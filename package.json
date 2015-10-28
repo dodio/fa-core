@@ -1,0 +1,42 @@
+{
+  "name": "fa-core",
+  "version": "1.0.0",
+  "description": "a web framework",
+  "main": "index.js",
+  "scripts": {
+    "dev": "SET FA_ENV=dev&SET NODE_DEBUG=fa/dispatcher,fa/require,fa/middleware&node app",
+    "test":"mocha "
+  },
+  "author": "dodio",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^1.5.0",
+    "colors": "^1.1.2",
+    "debuglog": "^1.0.1",
+    "express": "^4.13.3",
+    "lodash": "^3.10.1",
+    "yog-bigpipe": "^0.2.0",
+    "yog-swig": "^0.2.4",
+    "yog-view": "^0.3.0"
+  },
+  "devDependencies": {
+    "should": "^7.1.1",
+    "mocha": "*"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dodio/Fa-web-framework.git"
+  },
+  "keywords": [
+    "node",
+    "web",
+    "front-end"
+  ],
+  "bugs": {
+    "url": "https://github.com/dodio/Fa-web-framework/issues"
+  },
+  "homepage": "https://github.com/dodio/Fa-web-framework#readme"
+}
