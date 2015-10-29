@@ -15,5 +15,7 @@ module.exports = {
     engine: {
         tpl: 'yog-swig'
     },
+    viewCache : !rootFa.DEBUG,
+    
     defaultEngine: "tpl"
 };

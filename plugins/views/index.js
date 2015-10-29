@@ -17,10 +17,7 @@ module.exports =  function (server, conf) {
 
     app.set('view engine' , conf.defaultEngine || "tpl");
 
-    if (conf.viewCache) {
-        app.enable('view cache');
-    }
-
+    app.set('view cache',conf.viewCache);
     //初始化map.json API
     app.fis = new mapjson.ResourceApi(conf.confDir);
 

@@ -50,7 +50,7 @@ function core(server, conf){
         }
 
         if (!middlewareFactory){
-            throw new Error('middleware ' + middleware + ' not found');
+            throw new Error('middleware ' + middlewareName + ' not found');
         }
         var start = +(new Date());
         if (MIDDLEWARE_DEBUG){
