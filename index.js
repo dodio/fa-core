@@ -7,20 +7,28 @@ require("./promise");
 
 function Fa(){}
 
-
+var servers = {};
 // 根据当前配置情况生成一个 基于connect 的应用
 Fa.prototype.createServer = function(options) {
 
     options = options || {};
     var rootPath = options.rootPath;
 
+    if(!_.isString(options.serverName)){
+        throw new Error("缺少应用名字参数:serverName");
+    }
+
+    if(servers[options.serverName]){
+        throw new Error("已经有同名的应用");
+    }
+
     if(!_.isString(rootPath)){
-        throw new Error("缺少应用根路径参数");
+        throw new Error("缺少应用根路径参数:rootPath");
     }
 
     var pluginList = options.pluginList;
     if(!_.isArray(pluginList)){
-        throw new Error("缺少插件列表参数");
+        throw new Error("缺少插件列表参数:pluginList");
     }
 
     var fa = this.extend({
@@ -30,8 +38,12 @@ Fa.prototype.createServer = function(options) {
         middlewarePath : [rootPath,"middleware"].join("/")
     });
 
-    return new FaServer(options,fa);
+    return servers[options.serverName] = new FaServer(options,fa);
 };
+
+Fa.prototype.servers = function(){
+    return servers;
+}
 
 
 Fa.prototype.extend = function(options) {
