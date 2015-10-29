@@ -36,22 +36,22 @@ function core(server, conf){
         });
     } 
     for (var i = 0; i < conf.middleware.length; i++) {
-        var middleware = conf.middleware[i];
-        var middlewareName = middleware[0];
-        var middlewareConf = middleware[1];
+        var middlewareName = conf.middleware[i];
+        var middlewareConf;
         var middlewareFactory ;
-        // 如果是直接配置的中间件，则为直接的 middleware factory 
-        if (typeof middlewareConf === 'function'){
-            middlewareFactory = middlewareConf;
+        
+        // 如果是直接配置的中间件，则为直接的 middleware factory 配置为空
+        if (typeof middlewareName === 'function'){
+            middlewareFactory = middlewareName;
             middlewareConf = {};
         }else{
             middlewareFactory = server.middleware( middlewareName );
+            middlewareConf = conf[middlewareName];
         }
 
         if (!middlewareFactory){
             throw new Error('middleware ' + middleware + ' not found');
         }
-
         var start = +(new Date());
         if (MIDDLEWARE_DEBUG){
             app.use(startTime(middlewareName));
@@ -79,15 +79,13 @@ module.exports.dynamicDependency = function(server){
 // 0 位为中间件名字
 // 1 位为具体给中间件的配置
     middleware.forEach(function(ware){
-        var name = ware[0];
-        var conf = ware[1];
         // 直接在配置里的中间件函数，就直接忽略咯
-        if(_.isFunction(conf)){
+        if(_.isFunction(ware)){
             return;
         }
         // 如果中间件名字，在插件中存在，则添加插件依赖，并会优先使用插件提供的中间件
-        if( server.plugin(name) ){
-            dependency.push(name);
+        if( server.plugin(ware) ){
+            dependency.push(ware);
         }
     });
 
