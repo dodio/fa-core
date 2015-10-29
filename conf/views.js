@@ -10,12 +10,11 @@ module.exports = {
         skipAnalysis: true
     },
     tpl: {
-        cache: 'memory'
+        cache: rootFa.DEBUG ? false : 'memory'
     },
     engine: {
         tpl: 'yog-swig'
     },
-    viewCache : !rootFa.DEBUG,
     
     defaultEngine: "tpl"
 };
