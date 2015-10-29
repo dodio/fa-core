@@ -3,6 +3,7 @@ var createRequire = require("./lib/require");
 var path = require("path");
 var _ = require("lodash");
 var FaServer = require("./server");
+require("./promise");
 
 function Fa(){}
 
