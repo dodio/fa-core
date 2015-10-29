@@ -13,6 +13,7 @@ function FaServer(options,fa){
     var server = this;
     _.extend(this,fa);
     this.options = options;
+
    	this.PLUGIN_TIMEOUT = options.pluginTimeout || 3000;
    	this.ROOT_PATH = options.rootPath;
 
@@ -37,25 +38,41 @@ function FaServer(options,fa){
     
  	function loadPlugins(cb) {
  		var pluginFactory={};
- 		// 根据options pluginList 
- 		_.each(options.pluginList,function(pluginName){
- 			var plugin = fa.plugin(pluginName);
- 			if(plugin){
- 				if( plugin.dynamicDependency ){
-                    // 如果该插件需要根据配置动态依赖，则给生成动态依赖
-                    pluginFactory[pluginName] = plugin.dynamicDependency(server);
-                }else{
-                    pluginFactory[pluginName] = plugin; 
-                }
- 			}else{
-                throw new Error( util.format("Server:[%s] plugin [%s] does not exist.", server.serverName ,pluginName) );
-            }
- 		});
+ 		// 根据options pluginList 获取插件factory
+ 		getPluginFactory(options.pluginList);
 
 	    //注入插件加载代码
 	    pluginFactory = _.mapValues( pluginFactory , injectPluginFactory , server);
 	    //执行插件初始化
 	    async.auto( pluginFactory , cb);
+
+        // 一个递归的过程根据插件依赖，获取所有的应该加载的factory
+        function getPluginFactory(pluginList){
+            _.each(pluginList,function(pluginName){
+                // 已经获取了factory 
+                if(pluginFactory[pluginName]){
+                    return;
+                }
+                var plugin = fa.plugin(pluginName);
+                if(plugin){
+                    if( plugin.dynamicDependency ){
+                        // 如果该插件需要根据配置动态依赖，则给生成动态依赖
+                        plugin = plugin.dynamicDependency(server);
+                    }
+                    pluginFactory[pluginName] = plugin;
+                    // 递归处理依赖
+                    if(_.isArray(plugin)){
+                        
+                        var deps = _.take( plugin , plugin.length -1 );
+
+                        getPluginFactory(deps);
+                    }
+                }else{
+                    throw new Error( util.format("Server:[%s] plugin [%s] does not exist.", server.serverName ,pluginName) );
+                }
+            });
+        }
+
 	}
 
     //加载插件
