@@ -2,7 +2,7 @@
 
 var express = require('express');
 var urlparser = require('url');
-var debuglog = require('debuglog')('yog/dispatcher');
+var debuglog = require('debuglog')('fa/dispatcher');
 var fs = require('fs');
 var path = require('path');
 

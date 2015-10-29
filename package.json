@@ -4,24 +4,35 @@
   "description": "a web framework",
   "main": "index.js",
   "scripts": {
-    "dev": "SET FA_ENV=dev&SET NODE_DEBUG=fa/dispatcher,fa/require,fa/middleware&node app",
-    "test":"mocha "
+    "dev": "SET FA_ENV=dev&SET NODE_DEBUG=fa/dispatcher,fa/require,fa/middleware,fa/createServer,fa/log&node app",
+    "test": "mocha "
   },
   "author": "dodio",
   "license": "ISC",
   "dependencies": {
     "async": "^1.5.0",
+    "bluebird": "^3.0.2",
+    "body-parser": "^1.14.1",
     "colors": "^1.1.2",
+    "compressible": "^2.0.6",
+    "compression": "^1.6.0",
+    "cookie-parser": "^1.4.0",
     "debuglog": "^1.0.1",
     "express": "^4.13.3",
     "lodash": "^3.10.1",
+    "method-override": "^2.3.5",
+    "node-ral": "^0.1.3",
+    "response-time": "^2.3.1",
+    "serve-favicon": "^2.3.0",
     "yog-bigpipe": "^0.2.0",
+    "yog-log": "0.0.20",
     "yog-swig": "^0.2.4",
     "yog-view": "^0.3.0"
   },
   "devDependencies": {
     "should": "^7.1.1",
-    "mocha": "*"
+    "mocha": "*",
+    "less": "^2.5.3"
   },
   "directories": {
     "test": "test"
