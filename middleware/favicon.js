@@ -1,11 +1,13 @@
-module.exports.favicon = function(app, conf){
-    return function(){
-        if (require('fs').existsSync(conf.path)){
-            app.use(require('serve-favicon')(conf.path));
-        }
-    };
+module.exports = function(conf,server){
+
+	var path = (typeof conf.path == "function") ?  conf.path(server) : conf.path;
+
+    if (require('fs').existsSync(path)){
+    	return require('serve-favicon')(path);
+    }else{
+    	return function(req,res,next){
+    		next();
+    	}
+    }
 };
 
-module.exports.favicon.defaultConf = {
-    path: yog.ROOT_PATH + '/static/favicon.ico'
-};

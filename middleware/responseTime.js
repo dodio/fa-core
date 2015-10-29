@@ -1,5 +1,3 @@
-module.exports.responseTime = function(app, conf){
-    return function(){
-        app.use(require('response-time')(conf));
-    };
+module.exports = function(conf){
+    return require('response-time')(conf);
 };
