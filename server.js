@@ -13,6 +13,10 @@ function FaServer(options,fa){
     var server = this;
     _.extend(this,fa);
     this.options = options;
+    // 读取硬盘上的配置合并后的配置
+    server.realConfig = server.config;
+    // 储存被插件们处理后的配置信息.
+    server.config = rootFa.module("require").module();
 
    	this.PLUGIN_TIMEOUT = options.pluginTimeout || 3000;
    	this.ROOT_PATH = options.rootPath;
@@ -108,9 +112,12 @@ function injectPluginFactory(factory, name) {
             // yog.plugins[name] = plugin;
             cb && cb(err, plugin);
         };
-        //合并默认配置
-        conf = server.config(name);
-
+        //获取合并后的配置，复制这个配置对象（避免污染硬盘上的实际配置对象)
+        
+        conf = _.cloneDeep(server.realConfig(name));
+        // 记录到server对象上
+        server.config.setStatic(name,conf);
+        
         // if (conf.FA_DISABLE) {
         //     debuglog('plugin [%s] was disabled'.red, name);
         //     cb && cb(null, null);
@@ -156,6 +163,10 @@ function injectPluginFactory(factory, name) {
             runFactory(realFactory, function (err,plugin) {
                 clearTimeout(depsLoadTimeout);
                 depsLoadTimeout = null;
+
+                // console.log(server.realConfig(name));
+                // console.log(server.config(name));
+
                 cb && cb(err,plugin);
             });
         };

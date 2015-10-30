@@ -6,7 +6,7 @@ var fs = require("fs");
 
 function liveless (options,server){
 	var router = express.Router();
-	var root = (typeof options.root == "function") ? options.root(server) : options.root ;
+	var root = options.root = server.module("util").dynamicConfig( options.root, server );
 	router.get("**.less",function(req,res,next){
 		var path = req.path;
 		var file = [root,path].join("/");

@@ -1,6 +1,6 @@
 module.exports = function(conf,server){
 
-	var path = (typeof conf.path == "function") ?  conf.path(server) : conf.path;
+	var path =  conf.path = server.module("util").dynamicConfig( conf.path, server );
 
     if (require('fs').existsSync(path)){
     	return require('serve-favicon')(path);

@@ -6,9 +6,9 @@ var _ = require('lodash');
 module.exports =  function (server, conf) {
 
     var app = server.app;
-
-    conf.viewsDir =  (typeof conf.viewsDir === "function") ? conf.viewsDir(server) : conf.viewsDir;
-    conf.confDir =  (typeof conf.confDir === "function") ? conf.confDir(server) : conf.confDir;
+    var util = server.module("util");
+    conf.viewsDir = util.dynamicConfig( conf.viewsDir, server );
+    conf.confDir =  util.dynamicConfig( conf.confDir, server );
     
     var middleware = [];
     var viewEngines = [];

@@ -70,7 +70,7 @@ function core(server, conf){
 // http中间件加载  是一个动态依赖的过程，因有些中间件是插件提供的.需要等插件加载完毕后才能加载。
 // 但又不能确定用户是否一定会加载 插件的中间件，于是先动态根据应用配置，获取依赖
 module.exports.dynamicDependency = function(server){
-    var conf = server.config("http");
+    var conf = server.realConfig("http");
     var middleware = conf.middleware;
     var dependency = [];
 

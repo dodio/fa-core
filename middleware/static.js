@@ -3,7 +3,7 @@ var express = require("express");
 module.exports = function(options,server){
 
     var app = express.Router();
-    var staticPath = (typeof options.staticPath === "function") ? options.staticPath(server) : options.staticPath;
+    var staticPath = options.staticPath = server.module("util").dynamicConfig( options.staticPath, server );
     
     app.use(options.urlPattern, require('express').static( staticPath , options.options));
     //拦截404
