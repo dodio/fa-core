@@ -13,26 +13,42 @@ function ResourceApi(config_dir) {
  * @param  {[type]} id [description]
  * @return {[type]}    [description]
  */
+
+
 ResourceApi.prototype.resolve = function(id) {
     var info = this.getInfo(id);
-    return info ? info.uri : '';
+    return info ? info.uri : "";
 };
 
 ResourceApi.prototype.getInfo = function(id, ignorePkg) {
-    if (!id || !idr.exec(id)) {
+    if (!id) {
         return null;
     }
-
-    var ns = this.getNS(id);
-    var info;
-
-    if (this.maps[ns] || this.lazyload(ns)) {
-        info = this.maps[ns]['res'][id];
-        if (!ignorePkg && info && info['pkg']) {
-            info = this.maps[ns]['pkg'][info['pkg']];
+    var info ;
+    // var ns = this.getNS(id);
+    // var info;
+    // if (this.maps[ns] || this.lazyload(ns)) {
+    //     info = this.maps[ns]['res'][id];
+    //     if (!ignorePkg && info && info['pkg']) {
+    //         info = this.maps[ns]['pkg'][info['pkg']];
+    //     }
+    // }
+    // 如果是开发环境没有找到，信息择直接返回id对应的文件信息
+    
+    if(!info){
+        // 用于支持直接用http方式的引用,但不能是模板
+        if( /^http/.test(id) && !/\.tpl$/.test(id) || rootFa.ENV == "dev"){
+            var ext = path.extname(id).replace(".","");
+            if(ext == 'less'){
+                ext = "css";
+            }
+            return {
+                uri:id,
+                type:ext
+            }
         }
     }
-
+    
     return info;
 };
 
