@@ -63,6 +63,7 @@ module.exports = function (options) {
             if (action === null) {
                 debuglog('action [%s/%s] is missed, continue', routerName, actionName);
                 req.__autoRouterFailed__ = true;
+                req.url = req.originalUrl;
                 next();
                 return;
             }
@@ -168,6 +169,7 @@ module.exports = function (options) {
                 action(req, res, next);
             }
             else {
+                req.url = req.originalUrl;
                 next();
             }
         }
