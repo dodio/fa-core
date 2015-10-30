@@ -13,6 +13,8 @@ var middleware = [
 ]
 // 非开发模式开启日志
 !DEV && middleware.push('log');
+// 开发模式下liveload支持
+DEV && middleware.push('liveload');
 
 middleware = middleware.concat([
 	// "ral",

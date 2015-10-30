@@ -30,9 +30,10 @@
     "yog-view": "^0.3.0"
   },
   "devDependencies": {
-    "should": "^7.1.1",
+    "less": "^2.5.3",
+    "liveload": "^0.3.3",
     "mocha": "*",
-    "less": "^2.5.3"
+    "should": "^7.1.1"
   },
   "directories": {
     "test": "test"
