@@ -10,13 +10,15 @@ function liveless (options,server){
 	router.get("**.less",function(req,res,next){
 		var path = req.path;
 		var file = [root,path].join("/");
+		var fileDir = p.dirname(file);
 		fs.existsAsync(file)
 		.then(function(){
 			return fs.readFileAsync(file);
 		})
 		.then(function(input){
 			var opt = {
-				path:[root]
+				paths:[fileDir],
+				rootpath:root
 			};
 			return less.render( input.toString() ,opt);
 		})
