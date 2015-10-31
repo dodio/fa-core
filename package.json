@@ -25,9 +25,7 @@
     "response-time": "^2.3.1",
     "serve-favicon": "^2.3.0",
     "yog-bigpipe": "^0.2.0",
-    "yog-log": "0.0.20",
-    "yog-swig": "^0.2.4",
-    "yog-view": "^0.3.0"
+    "yog-log": "0.0.20"
   },
   "devDependencies": {
     "less": "^2.5.3",

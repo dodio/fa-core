@@ -15,12 +15,14 @@ function ResourceApi(config_dir) {
  */
 
 
-ResourceApi.prototype.resolve = function(id) {
+ResourceApi.prototype.resolve = function(id,from) {
+    // console.trace(id,from);
     var info = this.getInfo(id);
     return info ? info.uri : "";
 };
 
 ResourceApi.prototype.getInfo = function(id, ignorePkg) {
+    // console.log(id);
     if (!id) {
         return null;
     }
