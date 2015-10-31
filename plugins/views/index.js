@@ -1,5 +1,5 @@
 var mapjson = require('./mapjson.js');
-var yogView = require('./yog-view');
+var yogView = require('yog-view');
 var yogBigPipe = require('yog-bigpipe');
 var _ = require('lodash');
 
