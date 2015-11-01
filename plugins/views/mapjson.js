@@ -6,20 +6,25 @@ var emptyMap = {
     res:{},
     pkg:{}
 }
+
+var expHttp = /^(\/\/)|(http:\/\/)|(https:\/\/)/;
+
 function ResourceApi(config_dir,server) {
     this.config_dir = config_dir;
     this.server = server;
     var map = server.realConfig("mapJson.build") || emptyMap;
     map.res = _.mapKeys(map.res,function(v,uri){
         // 因为是在工程根目录对views进行编译，于是fis3 会带上views目录，现在需要去掉
-        return uri.replace(/^views/,"");
+        // if(v.type == "less"){
+        //     v.type = "css";
+        //     v.uri = v.uri.replace(/\.less$/,".css");
+        // }
+        return uri.replace(/^views\//,"");
     });
-
     // fis3的打包合并生成的文件uri，没有domain信息
     _.forIn(map.pkg,function(pkg,p){
         pkg.uri = server.options.staticDomain + pkg.uri;
     });
-
     this.maps = map;
 }
 
@@ -40,10 +45,13 @@ ResourceApi.prototype.getInfo = function(id, ignorePkg) {
     if (!id) {
         return null;
     }
-
+    // 如果是以 /js /home  开头的资源，强行去掉 /
+    if(/^\/\w+/.test(id)){
+        id = id.substring(1);
+    }
     // 如果是开发环境，则直接返回id对应的文件信息
     // 用于支持直接用http方式的引用,且为js或css,less,tpl
-    if( ( /^http/.test(id) && /\.(js|less|css|tpl)$/.test(id) ) || rootFa.ENV == "dev" ){
+    if( ( expHttp.test(id) && /\.(js|less|css|tpl)$/.test(id) ) || rootFa.ENV == "dev" ){
         var ext = path.extname(id).replace(".","");
         //开发时直接引用less，访问时自动编译后返回内容
         if(ext == 'less'){
