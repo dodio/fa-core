@@ -6,7 +6,7 @@ module.exports.static = {
       if(rootFa.ENV == "dev"){
         return [server.ROOT_PATH,"views"].join("/");
       }else{
-        return [server.ROOT_PATH,"static"].join("/");
+        return [server.ROOT_PATH,"output","static"].join("/");
       }
   },
   urlPattern: rootFa.ENV == "dev" ? '/' : "/static",

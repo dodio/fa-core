@@ -19,7 +19,7 @@ module.exports =  function (server, conf) {
 
     app.set('view cache',conf.viewCache);
     //初始化map.json API
-    app.fis = new mapjson.ResourceApi(conf.confDir);
+    app.fis = new mapjson.ResourceApi(conf.confDir, server );
 
     middleware.push(function (req, res, next) {
         res.fis = app.fis;

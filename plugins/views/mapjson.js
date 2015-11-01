@@ -1,10 +1,26 @@
 var fs = require('fs');
 var path = require('path');
-var idr = /^([\w0-9_\-]+):(?!(\/|\\))[^:]+$/i;
+var _ = require("lodash");
 
-function ResourceApi(config_dir) {
+var emptyMap = {
+    res:{},
+    pkg:{}
+}
+function ResourceApi(config_dir,server) {
     this.config_dir = config_dir;
-    this.maps = {};
+    this.server = server;
+    var map = server.realConfig("mapJson.build") || emptyMap;
+    map.res = _.mapKeys(map.res,function(v,uri){
+        // 因为是在工程根目录对views进行编译，于是fis3 会带上views目录，现在需要去掉
+        return uri.replace(/^views/,"");
+    });
+
+    // fis3的打包合并生成的文件uri，没有domain信息
+    _.forIn(map.pkg,function(pkg,p){
+        pkg.uri = server.options.staticDomain + pkg.uri;
+    });
+
+    this.maps = map;
 }
 
 /**
@@ -16,96 +32,45 @@ function ResourceApi(config_dir) {
 
 
 ResourceApi.prototype.resolve = function(id,from) {
-    // console.trace(id,from);
     var info = this.getInfo(id);
     return info ? info.uri : "";
 };
 
 ResourceApi.prototype.getInfo = function(id, ignorePkg) {
-    // console.log(id);
     if (!id) {
         return null;
     }
-    var info ;
-    // var ns = this.getNS(id);
-    // var info;
-    // if (this.maps[ns] || this.lazyload(ns)) {
-    //     info = this.maps[ns]['res'][id];
-    //     if (!ignorePkg && info && info['pkg']) {
-    //         info = this.maps[ns]['pkg'][info['pkg']];
-    //     }
-    // }
-    // 如果是开发环境没有找到，信息择直接返回id对应的文件信息
-    
-    if(!info){
-        // 用于支持直接用http方式的引用,但不能是模板
-        if( /^http/.test(id) && !/\.tpl$/.test(id) || rootFa.ENV == "dev"){
-            var ext = path.extname(id).replace(".","");
-            if(ext == 'less'){
-                ext = "css";
-            }
-            return {
-                uri:id,
-                type:ext
-            }
+
+    // 如果是开发环境，则直接返回id对应的文件信息
+    // 用于支持直接用http方式的引用,且为js或css,less,tpl
+    if( ( /^http/.test(id) && /\.(js|less|css|tpl)$/.test(id) ) || rootFa.ENV == "dev" ){
+        var ext = path.extname(id).replace(".","");
+        //开发时直接引用less，访问时自动编译后返回内容
+        if(ext == 'less'){
+            ext = "css";
+        }
+        return {
+            uri:id,
+            type:ext
         }
     }
-    
+    var info = this.maps['res'][id];
+    if (!ignorePkg && info && info['pkg']) {
+        info = this.maps['pkg'][info['pkg']];
+    }
     return info;
 };
 
 ResourceApi.prototype.getPkgInfo = function(id) {
-    if (!id || !idr.exec(id)) {
+    if (!id ) {
         return null;
     }
-
-    var ns = this.getNS(id);
     var info;
-
-    if (this.maps[ns] || this.lazyload(ns)) {
-        info = this.maps[ns]['pkg'][id];
-    }
-
+    info = this.maps['pkg'][id];
     return info;
 };
 
-ResourceApi.prototype.getNS = function (id) {
-    var p = id.indexOf(':');
-    if (p != -1) {
-        return id.substr(0, p);
-    } else {
-        return '__global__';
-    }
-};
 
-ResourceApi.prototype.lazyload = function (ns) {
-    var map_json = ns + '-map.json';
-    var stat;
-    
-    if (ns == '__global__') {
-        map_json = 'map.json';
-    }
-    map_json = path.join(this.config_dir, map_json);
-    
-    try {
-        stat = fs.statSync(map_json);
-    } catch(e) {
-        yog.log.fatal(map_json + ' not exist');
-        return false;
-    }
-
-    if (stat && stat.isFile()) {
-        try {
-            this.maps[ns] = JSON.parse(fs.readFileSync(map_json));
-        } catch (e) {
-            yog.log.fatal(map_json + ' parse failed');
-            return false;
-        }
-    } else {
-        return false;
-    }
-    return true;
-};
 
 ResourceApi.prototype.destroy = function (id) {
     this.maps = null;
