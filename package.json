@@ -4,7 +4,6 @@
   "description": "a web framework",
   "main": "index.js",
   "scripts": {
-    "dev": "SET FA_ENV=dev&SET NODE_DEBUG=fa/dispatcher,fa/require,fa/middleware,fa/createServer,fa/log&node app",
     "test": "mocha "
   },
   "author": "dodio",
