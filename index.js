@@ -76,16 +76,16 @@ Fa.prototype.extend = function(options) {
 
 module.exports.init = function(options) {
     var fa = new Fa();
-
+    //约定三种状态： 
+    //dev , 开发环境
+    //test , 测试环境
+    //prod，生产环境（含UAT）
     fa.ENV = process.env.FA_ENV || "prod"; //默认生产环境
 
     fa.DEBUG = process.env.FA_DEBUG === 'true' || fa.ENV === "dev";  //调试模式，输出调试信息或者记录日志等
-    fa.MERGED = fa.ENV !== "dev"; // 不是开发环境，默认静态资源是合并状态
-    fa.MERGED = !(process.env.FA_NOT_MERGED === "true"); // 在不是生产环境， 又不是dev 环境时，可以通过 FA_NOT_MERGED=true 设置资源非合并状态
 
     if(fa.ENV === "prod"){
-        fa.DEBUG = false;
-        fa.MERGED = true; //生产环境 资源必须是合并状态，且不为debug模式
+        fa.DEBUG = false; //生产环境 必须为debug模式
     }
 
     var module = fa.module = createRequire.module( [__dirname ,"lib"].join("/") ); //lib 或者组件，或者工具类加载器
