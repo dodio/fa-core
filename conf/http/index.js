@@ -7,9 +7,10 @@ var PROD = rootFa.ENV == "prod" ;
 var middleware = [
     'favicon',
 	"compression",
-	"bodyParser",
 	"responseTime",
-	"cookieParser"
+	"bodyParser",
+	"cookieParser",
+	'data'
 ]
 // 非开发模式开启日志
 !DEV && middleware.push('log');
