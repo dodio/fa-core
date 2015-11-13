@@ -1,5 +1,5 @@
 # Fa-web-framework
-从yog2-core fork 而来的 web ui层框架，优化前端工程。
+从百度的 yog2-kernel fork 而来的 web ui层框架，优化前端工程。
 
 yog2 基于fis，需要先启动一个运行时，然后开发应用发布到运行时。
 
