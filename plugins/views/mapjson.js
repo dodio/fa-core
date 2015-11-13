@@ -13,18 +13,11 @@ function ResourceApi(config_dir,server) {
     this.config_dir = config_dir;
     this.server = server;
     var map = server.realConfig("mapJson.build") || emptyMap;
-    map.res = _.mapKeys(map.res,function(v,uri){
-        // 因为是在工程根目录对views进行编译，于是fis3 会带上views目录，现在需要去掉
-        // if(v.type == "less"){
-        //     v.type = "css";
-        //     v.uri = v.uri.replace(/\.less$/,".css");
-        // }
-        return uri.replace(/^views\//,"");
-    });
+
     // fis3的打包合并生成的文件uri，没有domain信息
-    _.forIn(map.pkg,function(pkg,p){
-        pkg.uri = server.options.staticDomain + pkg.uri;
-    });
+    // _.forIn(map.pkg,function(pkg,p){
+    //     pkg.uri = server.options.staticDomain + pkg.uri;
+    // });
     this.maps = map;
 }
 
