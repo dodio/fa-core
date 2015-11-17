@@ -10,6 +10,7 @@ var middleware = [
 	"responseTime",
 	"bodyParser",
 	"cookieParser",
+	"session",
 	'data'
 ]
 // 非开发模式开启日志
