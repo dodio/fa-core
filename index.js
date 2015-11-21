@@ -22,6 +22,10 @@ Fa.prototype.createServer = function(options) {
         throw new Error("已经有同名的应用");
     }
 
+    if(global[options.serverName] != undefined){
+        throw new Error("全局变量:" + options.serverName + "已经被占用!");
+    }
+
     if(!_.isString(rootPath)){
         throw new Error("缺少应用根路径参数:rootPath");
     }
@@ -38,7 +42,8 @@ Fa.prototype.createServer = function(options) {
         middlewarePath : [rootPath,"middleware"].join("/")
     });
 
-    return servers[options.serverName] = new FaServer(options,fa);
+    return global[options.serverName] = servers[options.serverName] = new FaServer(options,fa);
+
 };
 
 Fa.prototype.servers = function(){
@@ -55,6 +60,7 @@ Fa.prototype.extend = function(options) {
     var faObj = _.extend({},this);
 
     faObj  = _.mapValues(faObj,function(value,key) {
+        // require 的特征是函数 且 函数上含有 extend 函数;
         if( _.isFunction(value) && _.isFunction(value.extend) ){
 
             var optKey = key+"Path";
@@ -81,7 +87,9 @@ module.exports.init = function(options) {
     //test , 测试环境
     //prod，生产环境（含UAT）
     fa.ENV = process.env.FA_ENV || "prod"; //默认生产环境
-
+    fa.IS_PROD = fa.ENV === "prod"; //生产环境
+    fa.IS_TEST = fa.ENV === "test"; //测试环境
+    fa.IS_DEV = fa.ENV === "dev"  ; // 开发环境
     fa.DEBUG = process.env.FA_DEBUG === 'true' || fa.ENV === "dev";  //调试模式，输出调试信息或者记录日志等
 
     if(fa.ENV === "prod"){
