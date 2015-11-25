@@ -38,10 +38,6 @@ ResourceApi.prototype.getInfo = function(id, ignorePkg) {
     if (!id) {
         return null;
     }
-    // 如果是以 /js /home  开头的资源，强行去掉 /
-    if(/^\/\w+/.test(id)){
-        id = id.substring(1);
-    }
     // 如果是开发环境，则直接返回id对应的文件信息
     // 用于支持直接用http方式的引用,且为js或css,less,tpl
     if( ( expHttp.test(id) && /\.(js|less|css|tpl)$/.test(id) ) || rootFa.ENV == "dev" ){
