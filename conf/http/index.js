@@ -1,8 +1,6 @@
 var _ = require("lodash");
 var fs = require("fs");
 
-var DEV = rootFa.ENV == "dev" ;
-var PROD = rootFa.ENV == "prod" ;
 
 var middleware = [
     'favicon',
@@ -14,9 +12,13 @@ var middleware = [
 	'data'
 ]
 // 非开发模式开启日志
-!DEV && middleware.push('log');
+rootFa.IS_DEV && middleware.push('log');
 // 开发模式下liveload支持
-DEV && middleware.push('liveload');
+rootFa.IS_DEV && middleware.push('liveload');
+// 开发模式开启liveless
+rootFa.IS_DEV && middleware.push("liveless");
+// 产品模式不开启静态资源模块
+!rootFa.IS_PROD && middleware.push("static");
 
 middleware = middleware.concat([
 	// "ral",
@@ -24,11 +26,6 @@ middleware = middleware.concat([
 	"methodOverride",
 	"dispatcher"
 	]);
-// 开发模式开启liveless
-DEV && middleware.push("liveless");
-
-// 产品模式不开启静态资源模块
-!PROD && middleware.push("static");
 
 middleware.push('notFound');
 middleware.push('error');

@@ -10,8 +10,7 @@ module.exports.static = {
       }
   },
   urlPattern: rootFa.ENV == "dev" ? '/' : "/static",
-  notFound: function(req, res){
-      res.status(404);
-      res.send('404: Resource not Found');
+  notFound: function(req,res,next){
+      next();
   }
 }
