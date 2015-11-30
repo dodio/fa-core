@@ -6,7 +6,11 @@ module.exports = function (conf,server) {
     if ( !server.IS_DEV ) {
         var logger = server.module("log");
         app.use(function(error,req,res,next){
-            logger.fatal(error);
+            if(error instanceof Error){
+                logger.fatal(error);
+            }else{
+                logger.notice(error);
+            }
             next(error);
         });
         app.use(conf.handler);
