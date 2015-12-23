@@ -16,7 +16,7 @@ module.exports = function (conf,server) {
     } else {
         debuglog('start debug mode for error page'.yellow);
         app.push(function(error,req,res,next){
-            console.log(error);
+            console.log(error.stack || error);
             next(error);
         });
     }
