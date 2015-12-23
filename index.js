@@ -92,6 +92,9 @@ module.exports.init = function(options) {
     fa.IS_DEV = fa.ENV === "dev"  ; // 开发环境
     fa.DEBUG = process.env.FA_DEBUG === 'true' || fa.ENV === "dev";  //调试模式，输出调试信息或者记录日志等
 
+    fa.IS_PROD && console.log("运行在【产品】模式下");
+    fa.IS_TEST && console.log("运行在【测试】模式下");
+    fa.IS_DEV && console.log("运行在【开发】模式下");
     if(fa.ENV === "prod"){
         fa.DEBUG = false; //生产环境 必须为debug模式
     }
