@@ -13,7 +13,9 @@ function ResourceApi(config_dir,server) {
     this.config_dir = config_dir;
     this.server = server;
     var map = server.realConfig("mapJson.build") || emptyMap;
-
+    if(!server.IS_DEV && emptyMap === map){
+        throw new Error("非开发环境运行，必须有resourceMap配置");
+    }
     // fis3的打包合并生成的文件uri，没有domain信息
     // _.forIn(map.pkg,function(pkg,p){
     //     pkg.uri = server.options.staticDomain + pkg.uri;
