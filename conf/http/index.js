@@ -12,7 +12,7 @@ var middleware = [
 	'data'
 ]
 // 非开发模式开启日志
-rootFa.IS_DEV && middleware.push('log');
+!rootFa.IS_DEV && middleware.push('log');
 // 开发模式下liveload支持
 rootFa.IS_DEV && middleware.push('liveload');
 // 开发模式开启liveless
